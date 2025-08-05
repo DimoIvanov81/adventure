@@ -4,8 +4,8 @@ from .models import MtbEvent, MtbEventImage, Participation
 
 @admin.register(MtbEvent)
 class MtbEventAdmin(admin.ModelAdmin):
-    list_display = ("title", "organizer", "date", "is_published", "date_created")
-    list_filter = ("is_published", "date")
+    list_display = ("title", "organizer", "date_created", "is_published", "date_created")
+    list_filter = ("is_published", "date_created")
     search_fields = ("title", "organizer__email")
     list_editable = ("is_published",)
 

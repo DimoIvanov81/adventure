@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 
     "adventure.ratings.apps.RatingsConfig",
     "adventure.mtb_events.apps.MtbEventsConfig",
+    "adventure.common.apps.CommonConfig"
 
 ]
 
