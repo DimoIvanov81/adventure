@@ -1,0 +1,35 @@
+{% extends "common/base.html" %}
+{% load static %}
+
+{% block title %}Register - Adventure{% endblock %}
+
+{% block content %}
+<div class="animated-gradient">
+  <div class="card shadow-sm p-4 auth-card">
+    <h2 class="mb-4 text-center">Register</h2>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      <div class="mb-3">
+        {{ form.email.label_tag }}
+        {{ form.email }}
+        {{ form.email.errors }}
+      </div>
+      <div class="mb-3">
+        {{ form.password1.label_tag }}
+        {{ form.password1 }}
+        {{ form.password1.errors }}
+      </div>
+      <div class="mb-3">
+        {{ form.password2.label_tag }}
+        {{ form.password2 }}
+        {{ form.password2.errors }}
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Register</button>
+    </form>
+    <p class="mt-3 text-center">
+      Already have an account? <a href="{% url 'login' %}">Login</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

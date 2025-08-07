@@ -21,7 +21,9 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('adventure.accounts.urls')),
     path('', include('adventure.common.urls')),
+    path('tracks/', include('adventure.mtb_tracks.urls'))
 ]
 
 if settings.DEBUG:

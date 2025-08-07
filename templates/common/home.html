@@ -4,42 +4,70 @@
 {% block title %}Home - Adventure{% endblock %}
 
 {% block content %}
-<!-- HERO SECTION -->
-<div class="hero-section d-flex flex-column justify-content-center align-items-center text-center text-white"
-     style="background: url('{% static "images/pic1.png" %}') center center / cover no-repeat;">
-  <h1 class="display-3 fw-bold mb-3">Find Your Path</h1>
-  <p class="lead mb-5">Discover MTB trails, join thrilling events, and share your adventure!</p>
+    <!-- HERO SECTION -->
+    <div class="hero-section d-flex flex-column justify-content-center align-items-center text-center text-white"
+         style="background: url('{% static "images/pic1.png" %}') center center / cover no-repeat;">
 
-  <!-- FEATURES  -->
-  <div class="features-row row w-100 justify-content-center">
-  <div class="col-md-3 mb-3">
-    <div class="card">
-      <div class="card-body">
-        <i class="bi bi-map display-4 text-success"></i>
-        <h3 class="mt-3">Explore Tracks</h3>
-        <p>Browse MTB trails shared by the community and discover new adventures.</p>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3 mb-3">
-    <div class="card">  
-      <div class="card-body">
-        <i class="bi bi-calendar-event display-4 text-primary"></i>
-        <h3 class="mt-3">Join Events</h3>
-        <p>Find MTB events near you or create your own to invite others.</p>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3 mb-3">
-    <div class="card">
-      <div class="card-body">
-        <i class="bi bi-upload display-4 text-info"></i>
-        <h3 class="mt-3">Share Tracks</h3>
-        <p>Upload your MTB routes and inspire others to ride with you.</p>
-      </div>
-    </div>
-  </div>
-</div>
+        <h1 class="display-3 fw-bold mb-3">Find Your Path</h1>
+        <p class="lead mb-5">Discover MTB trails, join thrilling events, and share your adventures!</p>
 
-</div>
+        <!-- FEATURES -->
+        <div class="features-row row w-100 justify-content-center">
+
+            <!-- Explore Tracks -->
+            <div class="col-md-3 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <i class="bi bi-map display-4 text-success"></i>
+                        <h3 class="mt-3">Explore Tracks</h3>
+                        <p>Browse MTB trails shared by the community and discover new adventures.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Join Events -->
+            <div class="col-md-3 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <i class="bi bi-calendar-event display-4 text-primary"></i>
+                        <h3 class="mt-3">Join Events</h3>
+                        <p>Find MTB events near you or create your own to invite others.</p>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-3 mb-3">
+                <div class="card share-card">
+
+
+                    <div class="default-content card-body">
+                        <i class="bi bi-upload display-4 text-info"></i>
+                        <h3 class="mt-3">Share</h3>
+                        <p>Upload your MTB tracks or create events.</p>
+                    </div>
+
+
+                    <div class="share-options row g-3 px-2">
+                        <div class="col-6">
+                            <a href="{% url 'create_track' %}" class="text-decoration-none text-dark">
+                                <div class="inner-card p-3 text-center">
+                                    <i class="bi bi-map-fill display-5 text-success"></i>
+                                    <h5 class="mt-2">Create Track</h5>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6">
+                            <div class="inner-card p-3 text-center">
+                                <i class="bi bi-calendar-plus display-5 text-primary"></i>
+                                <h5 class="mt-2">Create Event</h5>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
 {% endblock %}

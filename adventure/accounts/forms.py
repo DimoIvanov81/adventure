@@ -45,12 +45,18 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = AppProfile
         fields = ['first_name', 'last_name', 'date_of_birth', 'profile_picture', 'bio']
+        widgets = {
+            'date_of_birth': forms.DateInput(attrs={'type': 'date'}),
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
+
+
+
 
 
 # We use this form to change the email of the registered user in the frontend

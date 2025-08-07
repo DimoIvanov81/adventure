@@ -2,5 +2,8 @@ from django.apps import AppConfig
 
 
 class AccountsConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'adventure.accounts'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "adventure.accounts"
+
+    def ready(self):
+        import adventure.accounts.signals
