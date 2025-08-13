@@ -1,0 +1,60 @@
+{% extends "common/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container my-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h4 mb-0">{{ event.title }} — Participants ({{ participants_count }})</h1>
+    <div class="d-flex gap-2">
+      <button type="button" class="btn btn-outline-secondary" onclick="history.back()">Назад</button>
+      <a href="{% url 'event_details' event.pk %}" class="btn btn-outline-primary">Детайли</a>
+    </div>
+  </div>
+
+  {% if participants_count %}
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-sm align-middle mb-3">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Потребител</th>
+                <th scope="col">Email</th>
+                <th scope="col">Дата на записване</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for p in participants %}
+                <tr>
+                  <td>{{ forloop.counter }}</td>
+                  <td>{{ p.user.profile.full_name|default:p.user.email }}</td>
+                  <td>{{ p.user.email }}</td>
+                  <td>{{ p.date_joined|date:"Y-m-d H:i" }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <div class="input-group input-group-sm">
+          <span class="input-group-text">Emails</span>
+          <input id="emailsField" type="text" class="form-control" readonly value="{{ emails_list }}">
+          <button class="btn btn-outline-secondary" type="button" onclick="copyEmails()">Копирай</button>
+        </div>
+      </div>
+    </div>
+  {% else %}
+    <div class="alert alert-info">Няма записани участници.</div>
+  {% endif %}
+</div>
+
+<script>
+function copyEmails(){
+  const el = document.getElementById('emailsField');
+  el.select();
+  el.setSelectionRange(0, 99999);
+  navigator.clipboard.writeText(el.value);
+}
+</script>
+{% endblock %}

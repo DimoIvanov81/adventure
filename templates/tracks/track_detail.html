@@ -1,0 +1,109 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block title %}{{ track.title }}{% endblock %}
+
+{% block extra_css %}
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'track_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-md-8">
+                <h2>{{ track.title }}</h2>
+
+                {% if track.first_image %}
+                    <img src="{{ track.first_image.image.url }}" class="img-fluid mb-3" alt="Track Image">
+                {% endif %}
+
+                <p>{{ track.description }}</p>
+
+                {% if track.gps_file %}
+                    <a href="{{ track.gps_file.url }}" class="btn btn-outline-secondary mb-4" download>
+                        Download GPS Track
+                    </a>
+                {% endif %}
+
+                {% if track.images.all|length > 1 %}
+                    <div class="row mt-4">
+                        {% for image in track.images.all %}
+                            {% if not forloop.first %}
+                                <div class="col-6 col-md-4 mb-3">
+                                    <img src="{{ image.image.url }}" class="img-fluid rounded mb-1" alt="Track Image">
+                                    {% if image.description %}
+                                        <p class="small text-muted">{{ image.description }}</p>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="col-md-4">
+                <div class="rating-section mb-3">
+                    <h5>Rate this track</h5>
+
+                    <div id="star-rating"
+                         class="star-rating"
+                         data-user-rating="{{ user_rating|default:0 }}"
+                         data-average-rating="{{ track.average_rating }}"
+                         data-rate-url="{% url 'mtb-rating' track.pk %}">
+                        {% for i in "0"|rjust:"5" %}
+                            <i class="fa-solid fa-star star" data-value="{{ forloop.counter }}"></i>
+                        {% endfor %}
+                    </div>
+
+                    <small>
+                        Average Rating:
+                        <span id="average-rating">{{ average_rating|default:"-" }}</span>
+                        (<span id="rating-count">{{ rating_count }}</span> ratings)
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <hr>
+
+        <div id="comments">
+            <h4>Comments ({{ comments.count }})</h4>
+
+            {% if comments %}
+                {% for comment in comments %}
+                    <div id="comment-{{ comment.id }}" class="mb-3 border rounded p-3">
+                        <strong>{{ comment.author.profile.full_name }}</strong>
+                        <p class="mb-1">{{ comment.text|linebreaksbr }}</p>
+                        <small class="text-muted">{{ comment.date_created|date:"F j, Y, H:i" }}</small>
+
+                        {% if request.user.is_authenticated and request.user == comment.author %}
+                            <div class="mt-2 d-flex gap-3">
+                                <a href="{% url 'comment_edit' comment.id %}" class="small">Edit</a>
+                                <form action="{% url 'comment_delete' comment.id %}" method="post"
+                                      style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="small btn btn-link text-danger p-0 m-0 align-baseline">
+                                        Delete
+                                    </button>
+                                </form>
+
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-muted">No comments yet.</p>
+            {% endif %}
+        </div>
+
+        <a href="{% url 'track_add_comment' track.pk %}" class="btn btn-primary add-comment-btn">
+            Add Comment
+        </a>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'js/track_rating.js' %}"></script>
+{% endblock %}

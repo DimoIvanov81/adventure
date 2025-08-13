@@ -1,0 +1,36 @@
+{% extends "common/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'common/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+    <section class="dash-wrap">
+        <h1 class="dash-title">Dashboard</h1>
+
+        <div class="dashboard-grid">
+            <div class="dashboard-card" onclick="location.href='{% url 'my-events' %}'">
+                <div class="dashboard-icon">📅</div>
+                <h3 class="dashboard-head">My Events</h3>
+                <p class="dashboard-desc">View and manage your created events.</p>
+            </div>
+
+
+            <div class="dashboard-card" onclick="location.href='{% url 'my_tracks' %}'">
+                <div class="dashboard-icon">🗺️</div>
+                <h3 class="dashboard-head">My Tracks</h3>
+                <p class="dashboard-desc">View and manage your MTB tracks.</p>
+            </div>
+
+
+         
+
+            <div class="dashboard-card" onclick="location.href='{% url 'my_joined_events' %}'">
+                <div class="dashboard-icon">👥</div>
+                <h3 class="dashboard-head">Events I'm Attending</h3>
+                <p class="dashboard-desc">See events you've joined.</p>
+            </div>
+        </div>
+    </section>
+{% endblock %}

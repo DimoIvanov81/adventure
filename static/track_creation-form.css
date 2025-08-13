@@ -1,0 +1,143 @@
+:root{
+
+  --footer-h: 60px;
+  --edge-pad: 16px;
+  --buf: 3px;
+}
+
+
+body{
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+}
+
+main{
+  flex: 1;
+}
+
+
+footer{
+  height: var(--footer-h);
+  box-sizing: border-box;
+  padding: 12px 16px;
+  text-align: center;
+  font-size: 0.9rem;
+  background-color: #1f1f1f;
+  color: #fff;
+}
+
+
+.animated-gradient{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: var(--edge-pad) 16px var(--edge-pad);
+  box-sizing: border-box;
+  min-height: clamp(
+      400px,
+      calc(100dvh - var(--footer-h) - 2px - (2 * var(--edge-pad))),
+      720px
+  );
+
+  background: linear-gradient(-45deg, #ffd6a5, #ffcad4, #e0c3fc, #cfd9df);
+  background-size: 400% 400%;
+  animation: gradientShift 10s ease infinite;
+}
+
+@keyframes gradientShift{
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+
+.track-form-container{
+  background: #fff;
+  padding: 12px;
+  border-radius: 12px;
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+}
+
+.track-form-container h2{
+  margin: 0 0 16px;
+  text-align: center;
+}
+
+
+.form-group{ margin-bottom: 1rem; }
+
+.form-group label{
+  display: block;
+  margin-bottom: 0.3rem;
+  font-weight: 500;
+}
+
+input[type="text"],
+input[type="file"],
+select,
+textarea{
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+
+.description-wrapper{ margin-top: 0.5rem; }
+
+.description-wrapper textarea,
+.description-wrapper input{
+  width: 100%;
+  min-height: 60px;
+  max-height: 120px;
+}
+
+
+.track-image-form{
+  background-color: #d1d1d1;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+}
+
+
+#add-image{
+  padding: 0.6rem;
+  font-size: 0.95rem;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+button[type="submit"]{
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1.05rem;
+  background-color: #0d6efd;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  margin-top: 1rem;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover{
+  background-color: #0b5ed7;
+}
+
+
+textarea{
+  min-height: 60px;
+  max-height: 120px;
+  height: 80px;
+  resize: none;
+  overflow-y: auto;
+}

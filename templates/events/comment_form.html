@@ -1,0 +1,33 @@
+{% extends "common/base.html" %}
+{% load static %}
+
+{% block title %}{% if form.instance.pk %}Edit Comment{% else %}Add Comment{% endif %}{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'event_creation.css' %}">
+
+<div class="animated-gradient">
+  <div class="track-form-container">
+    <h2>
+      {% if form.instance.pk %}Edit Comment{% else %}Add Comment{% endif %}
+      <div class="small text-muted mt-1">Event: {{ event.title }}</div>
+    </h2>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+
+      <div class="form-group">
+        {{ form.text.label_tag }}
+        {{ form.text }}
+        {{ form.text.errors }}
+      </div>
+
+      <button type="submit">
+        {% if form.instance.pk %}Save{% else %}Post{% endif %}
+      </button>
+      <a href="{% url 'event_details' event.pk %}#comments" class="btn-cancel">Cancel</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

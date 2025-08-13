@@ -1,0 +1,63 @@
+{% extends "common/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+  <h1 class="mb-4 text-center">Events I'm Attending</h1>
+
+  {% if events %}
+    <div class="row g-4">
+      {% for e in events %}
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="card h-100 shadow-sm">
+            {% with first_img=e.images.first %}
+              {% if first_img %}
+                <img src="{{ first_img.image.url }}" class="card-img-top" alt="{{ e.title }}"
+                     style="height:200px;object-fit:cover;">
+              {% endif %}
+            {% endwith %}
+
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title mb-1">{{ e.title }}</h5>
+
+              <div class="small text-muted mb-2">
+                {% if e.start_date %}Starts: {{ event.start_date|date:"d.m.Y" }}{% endif %}
+              </div>
+
+              <div class="mt-auto d-flex justify-content-between small text-muted">
+                <span>Participants: {{ e.participants_count }}</span>
+                <span>Comments: {{ e.comments_count }}</span>
+              </div>
+
+              <div class="mt-3">
+               
+                <a href="{% url 'event_details' e.pk %}" class="btn btn-primary btn-sm">Details</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if is_paginated %}
+      <nav class="mt-4" aria-label="pagination">
+        <ul class="pagination justify-content-center">
+          {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Prev</a></li>
+          {% else %}<li class="page-item disabled"><span class="page-link">Prev</span></li>{% endif %}
+
+          <li class="page-item disabled">
+            <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+          </li>
+
+          {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+          {% else %}<li class="page-item disabled"><span class="page-link">Next</span></li>{% endif %}
+        </ul>
+      </nav>
+    {% endif %}
+  {% else %}
+    <div class="alert alert-info">You haven’t joined any events yet.</div>
+  {% endif %}
+</div>
+{% endblock %}

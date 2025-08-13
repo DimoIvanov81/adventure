@@ -1,0 +1,109 @@
+.animated-gradient {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 60px);
+    background: linear-gradient(-45deg, #ffd6a5, #ffcad4, #e0c3fc, #cfd9df);
+    background-size: 400% 400%;
+    animation: gradientShift 10s ease infinite;
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.comment-card {
+    max-width: 500px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}
+
+.comment-card h4 {
+    margin-bottom: 1rem;
+    margin-top: 0;
+    text-align: left;
+}
+
+.comment-card label {
+    display: none;
+}
+
+.comment-card textarea {
+    width: 100%;
+    min-height: 250px;
+    resize: vertical;
+    font-size: 1rem;
+    border-radius: 8px;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+}
+
+.comment-card button {
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+
+}
+
+.comment-form textarea {
+    width: 100%;
+    min-height: 200px;
+    padding: 1rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    resize: vertical;
+    transition: all 0.3s ease;
+}
+
+.comment-form textarea:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 8px rgba(13, 110, 253, 0.5);
+    outline: none;
+}
+
+.comment-buttons {
+    display: flex;
+    justify-content: space-between; /* бутоните в двата края */
+    margin-top: 1rem;
+}
+
+.custom-btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+    min-width: 90px;
+    height: 42px;
+    text-align: center;
+    line-height: 1.5;
+}
+
+.submit-btn {
+    background-color: #0d6efd;
+    color: white;
+}
+
+.submit-btn:hover {
+    background-color: #0b5ed7;
+}
+
+.cancel-btn {
+    background-color: #dc3545; /* червен бутон */
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.cancel-btn:hover {
+    background-color: #bb2d3b;
+
+}
+

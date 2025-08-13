@@ -1,0 +1,85 @@
+{# templates/events/event_form.html #}
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block title %}
+    {% if is_edit %}Edit Event{% else %}Create Event{% endif %}
+{% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'event_creation.css' %}">
+
+    <div class="animated-gradient">
+        <div class="track-form-container">
+            <h2>{% if is_edit %}Edit Event{% else %}Create Event{% endif %}</h2>
+
+            <form method="post" enctype="multipart/form-data" id="event-create-form">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+
+                <div class="form-group">
+                    {{ form.title.label_tag }} {{ form.title }} {{ form.title.errors }}
+                </div>
+                <div class="form-group">
+                    {{ form.description.label_tag }} {{ form.description }} {{ form.description.errors }}
+                </div>
+                <div class="form-group">
+                    {{ form.start_date.label_tag }} {{ form.start_date }} {{ form.start_date.errors }}
+                </div>
+                <div class="form-group">
+                    {{ form.contact_email.label_tag }} {{ form.contact_email }} {{ form.contact_email.errors }}
+                </div>
+                <div class="form-group">
+                    {{ form.contact_phone.label_tag }} {{ form.contact_phone }} {{ form.contact_phone.errors }}
+                </div>
+
+                <hr>
+                <h5>Event Images</h5>
+
+                {{ image_formset.management_form }}
+
+                <div id="images-forms">
+                    {% for img_form in image_formset %}
+                        <div class="track-image-form">
+                            <div class="form-group">
+                                {{ img_form.image.label_tag }} {{ img_form.image }} {{ img_form.image.errors }}
+                            </div>
+                            <div class="form-group">
+                                {{ img_form.description.label_tag }} {{ img_form.description }} {{ img_form.description.errors }}
+                            </div>
+
+                            {% if image_formset.can_delete and img_form.DELETE %}
+                                <span style="display:none">{{ img_form.DELETE }}</span>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <template id="empty-form">
+                    {% with f=image_formset.empty_form %}
+                        <div class="track-image-form">
+                            <div class="form-group">
+                                {{ f.image.label_tag }} {{ f.image }}
+                            </div>
+                            <div class="form-group">
+                                {{ f.description.label_tag }} {{ f.description }}
+                            </div>
+                            {% if image_formset.can_delete and f.DELETE %}
+                                <span style="display:none">{{ f.DELETE }}</span>
+                            {% endif %}
+                        </div>
+                    {% endwith %}
+                </template>
+
+                <button type="button" class="btn btn-outline-secondary" id="add-image">+ Add another image</button>
+
+                <button type="submit">
+                    {% if is_edit %}Save Changes{% else %}Create Event{% endif %}
+                </button>
+                <a href="{% url 'explore_all_events' %}" class="btn btn-cancel">Cancel</a>
+            </form>
+        </div>
+    </div>
+
+    <script src="{% static 'js/event_creation.js' %}"></script>
+{% endblock %}

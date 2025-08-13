@@ -1,0 +1,34 @@
+{% extends "common/base.html" %}
+{% load static %}
+
+{% block title %}{% if form.instance.pk %}Edit comment{% else %}Add comment{% endif %}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'comments.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="animated-gradient">
+  <div class="comment-card">
+    <h4>{% if form.instance.pk %}Edit comment{% else %}Add a comment{% endif %}</h4>
+
+    <form method="post" class="comment-form"
+          action="{% if form.instance.pk %}{% url 'comment_edit' form.instance.pk %}{% else %}{% url 'track_add_comment' track.pk %}{% endif %}">
+      {% csrf_token %}
+
+      
+      {{ form.text }}
+
+      <div class="comment-buttons">
+        <button type="submit" class="custom-btn submit-btn">
+          {% if form.instance.pk %}Save{% else %}Post{% endif %}
+        </button>
+
+        <a href="{% url 'track_detail' track.pk %}#comments" class="custom-btn cancel-btn">
+          Cancel
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

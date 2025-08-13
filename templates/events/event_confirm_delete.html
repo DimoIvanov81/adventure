@@ -1,0 +1,14 @@
+{% extends "common/base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="mb-4">Потвърждение за изтриване</h1>
+    <p>Сигурни ли сте, че искате да изтриете събитието <strong>{{ object.title }}</strong>?</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Изтрий</button>
+        <a href="{% url 'event_details' object.pk %}" class="btn btn-secondary">Отказ</a>
+    </form>
+</div>
+{% endblock %}

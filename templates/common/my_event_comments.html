@@ -1,0 +1,61 @@
+{% extends "common/base.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="container my-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1 class="h4 mb-0">{{ event.title }} — Comments ({{ comments_count }})</h1>
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-outline-secondary" onclick="history.back()">Назад</button>
+                <a href="{% url 'event_details' event.pk %}" class="btn btn-outline-primary">Детайли</a>
+            </div>
+        </div>
+
+        {% if comments_count %}
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-sm align-middle mb-0">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Author</th>
+                                <th>Text</th>
+                                <th>Created</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for c in comments %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ c.author.profile.full_name|default:c.author.email }}</td>
+                                    <td>{{ c.text }}</td>
+                                    <td class="text-nowrap">{{ c.date_created|date:"Y-m-d H:i" }}</td>
+                                    <td class="text-end">
+                                        <div class="d-flex flex-column gap-1">
+                                            <form method="post"
+                                                  action="{% url 'my_event_comment_delete' event.pk c.pk %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">Delete
+                                                </button>
+                                            </form>
+                                            <a href="{% url 'add_event_comment' event.pk %}?reply_to={{ c.pk }}"
+                                               class="btn btn-sm btn-outline-primary">
+                                                Reply
+                                            </a>
+                                        </div>
+                                    </td>
+
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="alert alert-info">No comments yet.</div>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,204 @@
+/***************  STANDALONE EVENTS LIST CSS  ***************/
+
+/* Scope само за тази страница */
+.events-view {
+  min-height: 100vh;
+  display: flex !important;
+  flex-direction: column !important;
+  padding-top: 24px !important;
+  padding-bottom: 24px !important;
+  box-sizing: border-box;
+  color: #1f2937;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+               Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+}
+
+/* Grid: 3 колони, естествена височина на редовете */
+.events-view .row.g-4 {
+  margin: 0 !important;
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: auto;
+  align-content: start;
+  gap: 24px !important;
+}
+
+/* Нулираме bootstrap-колоните вътре */
+.events-view .row.g-4 > [class*="col-"] {
+  padding: 0 !important;
+  margin: 0 !important;
+  width: auto !important;
+  max-width: none !important;
+  flex: unset !important;
+}
+
+.events-view h1,
+.events-view .page-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 16px 0;
+}
+
+/* Карта */
+.events-view .card.event-card,
+.events-view .card {
+  display: flex !important;
+  flex-direction: column !important;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+  overflow: hidden;
+  height: 100%;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+
+.events-view .card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.10);
+}
+
+/* Снимка */
+.events-view .card-img-top {
+  height: 180px !important;
+  width: 100% !important;
+  object-fit: cover !important;
+  display: block;
+}
+
+/* Тяло */
+.events-view .card-body {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px;
+  padding: 14px !important;
+  flex: 1 1 auto !important;
+  overflow: hidden;
+}
+
+.events-view .card-title {
+  font-size: 18px;
+  line-height: 1.25;
+  font-weight: 700;
+  margin: 0 !important;
+}
+
+.events-view .card-title a,
+.events-view .card-title a:visited {
+  color: #111827;
+  text-decoration: none;
+}
+.events-view .card-title a:hover { text-decoration: underline; }
+
+/* Подзаглавие/дата */
+.events-view .card-body .small,
+.events-view .small { color: #6b7280 !important; }
+
+/* Описание – до 2 реда */
+.events-view .card-text {
+  margin: 0 !important;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 2.6em;
+}
+
+/* Долен ред с два равни бутона */
+.events-view .mt-auto {
+  margin-top: auto !important;
+  display: flex;
+  gap: 8px;
+}
+
+/* Глобален стил за бутони (извън долния ред са full-width) */
+.events-view .btn,
+.events-view a.btn {
+  display: inline-block;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 0;
+  text-align: center;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+  background: #1d4ed8;
+  color: #fff !important;
+  text-decoration: none !important;
+  transition: opacity .12s ease, transform .06s ease;
+}
+.events-view .btn:hover { opacity: .92; }
+.events-view .btn:active { transform: scale(0.99); }
+
+/* В долния ред: два равни бутона */
+.events-view .mt-auto .btn {
+  width: auto;     /* override на width:100% */
+  flex: 1;         /* равни ширини */
+}
+
+/* Превръщаме <small class="text-muted">going</small> в бутоноподобен */
+.events-view .mt-auto .text-muted {
+  flex: 1;
+  display: inline-block;
+  text-align: center;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #6b7280;  /* сив */
+  color: #fff !important;
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* Outline варианта да е същия син */
+.events-view .btn-outline-primary {
+  background: #1d4ed8 !important;
+  border-color: #1d4ed8 !important;
+  color: #fff !important;
+}
+
+/* Паджинатор */
+.events-view nav[aria-label="Events pagination"] { margin-top: auto !important; }
+.events-view .pagination {
+  display: inline-flex !important;
+  list-style: none;
+  padding-left: 0 !important;
+  margin: 20px 0 0 0 !important;
+  gap: 6px;
+}
+.events-view .pagination .page-item { display: inline-block; }
+.events-view .pagination .page-link,
+.events-view .pagination .page-item > span.page-link {
+  display: inline-block;
+  min-width: 38px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #111827;
+  text-align: center;
+  text-decoration: none;
+  font-weight: 600;
+}
+.events-view .pagination .page-item.active .page-link {
+  background: #1d4ed8 !important;
+  border-color: #1d4ed8 !important;
+  color: #fff !important;
+}
+.events-view .pagination .page-item.disabled .page-link,
+.events-view .pagination .page-item.disabled > span.page-link {
+  opacity: .5;
+  pointer-events: none;
+}
+.events-view nav[aria-label="Events pagination"] .pagination { justify-content: center; }
+
+/* Alert при липса на събития */
+.events-view .alert {
+  border: 1px solid #e5e7eb !important;
+  background: #f9fafb !important;
+  color: #374151 !important;
+  padding: 16px 18px !important;
+  border-radius: 10px !important;
+  margin: 0 auto !important;
+}

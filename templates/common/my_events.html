@@ -1,0 +1,87 @@
+{% extends "common/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+  <h1 class="mb-4 text-center">My Events ({{ total_events_count }})</h1>
+
+  <div class="d-flex justify-content-center gap-3 mb-4">
+    <button class="btn btn-primary" onclick="showSection('active')">
+      Active Events ({{ active_events|length }})
+    </button>
+    <button class="btn btn-secondary" onclick="showSection('expired')">
+      Expired Events ({{ expired_events|length }})
+    </button>
+    <button class="btn btn-info" onclick="showSection('all')">
+      All Events ({{ total_events_count }})
+    </button>
+  </div>
+
+  <div id="active-events" class="event-section">
+    {% if active_events %}
+      {% for item in active_events %}
+        <div class="card mb-3 shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">{{ item.event.title }}</h5>
+            <p class="card-text text-muted mb-2">Start date: {{ item.event.start_date|date:"M d, Y" }}</p>
+            <p class="mb-3">{{ item.event.description }}</p>
+
+            <div class="d-flex flex-wrap gap-2">
+              <a href="{% url 'event_details' item.event.pk %}" class="btn btn-outline-primary btn-sm">Details</a>
+
+              <a href="{% url 'event_participants' item.event.pk %}" class="btn btn-warning btn-sm">
+                Participants ({{ item.participant_count }})
+              </a>
+
+              <a href="{% url 'my_event_comments' item.event.pk %}" class="btn btn-outline-dark btn-sm">
+                Comments ({{ item.comments_count }})
+              </a>
+
+              <a href="{% url 'event_edit' item.event.pk %}" class="btn btn-primary btn-sm">Edit</a>
+              <a href="{% url 'event_delete' item.event.pk %}" class="btn btn-danger btn-sm">Delete</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="text-center text-muted">No active events.</p>
+    {% endif %}
+  </div>
+
+  <div id="expired-events" class="event-section" style="display:none;">
+    {% if expired_events %}
+      {% for item in expired_events %}
+        <div class="card mb-3 shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title">{{ item.event.title }}</h5>
+            <p class="card-text text-muted mb-2">Start date: {{ item.event.start_date|date:"M d, Y" }}</p>
+            <p class="mb-3">{{ item.event.description }}</p>
+
+            <div class="d-flex flex-wrap gap-2">
+              <a href="{% url 'event_details' item.event.pk %}" class="btn btn-outline-primary btn-sm">Details</a>
+              <a href="{% url 'event_participants' item.event.pk %}" class="btn btn-warning btn-sm">
+                Participants ({{ item.participant_count }})
+              </a>
+              <a href="{% url 'my_event_comments' item.event.pk %}" class="btn btn-outline-dark btn-sm">
+                Comments ({{ item.comments_count }})
+              </a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="text-center text-muted">No expired events.</p>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+function showSection(section){
+  const a = document.getElementById('active-events');
+  const e = document.getElementById('expired-events');
+  if(section==='active'){a.style.display='block';e.style.display='none'}
+  else if(section==='expired'){a.style.display='none';e.style.display='block'}
+  else {a.style.display='block';e.style.display='block'}
+}
+</script>
+{% endblock %}

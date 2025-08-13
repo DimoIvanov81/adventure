@@ -1,0 +1,95 @@
+/*************** EVENT DETAILS PAGE ***************/
+.event-details-view {
+  max-width: 66%; /* 2/3 от екрана */
+  margin: 30px auto;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Заглавие */
+.event-details-view h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+/* Бутона Going */
+.event-details-view .btn-going {
+  background: #16a34a;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-weight: 600;
+  width: 100%;
+  margin: 15px 0;
+}
+.event-details-view .btn-going:hover {
+  background: #15803d;
+}
+
+/* Снимки една под друга */
+.event-details-view .event-images {
+  margin-top: 20px;
+}
+.event-details-view .event-images img {
+  display: block;
+  width: 100%;
+  height: 300px; /* фиксирана височина */
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.event-details-view .event-images img:hover {
+  transform: scale(1.01);
+}
+
+/* Lightbox стил при клик */
+.event-details-view .lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+.event-details-view .lightbox img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 8px;
+}
+
+/* Футър в дъното */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+footer {
+  margin-top: auto;
+}
+
+/* Back to Events бутон — фиксиран */
+.back-to-events-fixed {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #1d4ed8;
+  color: #fff !important;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  z-index: 1500;
+}
+.back-to-events-fixed:hover {
+  background: #1e40af;
+}

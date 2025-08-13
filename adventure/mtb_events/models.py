@@ -121,19 +121,3 @@ class EventComment(models.Model):
         return f"Comment by {self.author} on {self.event.title}"
 
 
-"""
-    my_events = request.user.organized_events.all()
-    for event in my_events:
-    pending = event.comments.filter(is_visible=False)
-
-    from django.contrib.auth.decorators import login_required
-    from django.shortcuts import render
-
-    @login_required
-    def my_events_dashboard(request):
-        events = request.user.organized_events.all()
-        context = {
-            "events": events,
-        }
-        return render(request, "events/my_events_dashboard.html", context)
-"""

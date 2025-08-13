@@ -1,0 +1,68 @@
+{% extends "common/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'track_list_styles.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container tracks-container">
+        <div class="tracks-header">
+            <h2>Explore MTB Tracks</h2>
+        </div>
+
+        <div class="row">
+            {% for track in tracks %}
+                <div class="col-md-4 mb-4">
+                    <div class="card track-card h-100">
+                        {% if track.first_image %}
+                            <img src="{{ track.first_image.image.url }}" class="card-img-top" alt="{{ track.title }}">
+                        {% else %}
+                            <img src="{% static 'images/default_track.jpg' %}" class="card-img-top" alt="Default image"> TODO: I have to set a default picture
+                        {% endif %}
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">{{ track.title }}</h5>
+                            <p class="card-text">{{ track.description|truncatewords:12 }}</p>
+                            <p><strong>Difficulty:</strong> {{ track.difficulty }}</p>
+                            <p>
+                                <i class="bi bi-star-fill text-warning"></i>
+                                {{ track.average_rating|floatformat:1 }} ({{ track.comments.count }} comments)
+                            </p>
+                            <a href="{% url 'track_detail' track.pk %}" class="btn btn-primary mt-auto">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+     
+        {% if is_paginated %}
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                        </li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                        <li class="page-item {% if num == page_obj.number %}active{% endif %}">
+                            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% else %}
+            <div class="text-center mt-4 text-muted">
+                Page 1 of 1
+            </div>
+        {% endif %}
+
+    </div>
+{% endblock %}

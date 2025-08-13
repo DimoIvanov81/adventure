@@ -1,0 +1,10 @@
+.detail-cover {
+  height: 340px;
+  width: 100%;
+  object-fit: cover;
+}
+
+.comments-scroll {
+  max-height: calc(100vh - 220px);
+  overflow-y: auto;
+}

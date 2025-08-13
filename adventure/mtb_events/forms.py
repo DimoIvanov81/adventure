@@ -9,6 +9,9 @@ class MtbEventForm(PlaceholderFormMixin, forms.ModelForm):
     class Meta:
         model = MtbEvent
         fields = ['title', 'description', 'start_date', 'contact_email', 'contact_phone']
+        widgets = {
+            'start_date': forms.DateInput(attrs={'type': 'date'}),
+        }
 
     placeholders = {
         'title': 'Enter the title of the event',
@@ -18,9 +21,7 @@ class MtbEventForm(PlaceholderFormMixin, forms.ModelForm):
         'contact_phone': 'Contact phone number',
     }
 
-    widgets = {
-        'start_date': forms.DateInput(attrs={'type': 'date'}),
-    }
+
 
 
 class MtbEventImageForm(PlaceholderFormMixin, forms.ModelForm):

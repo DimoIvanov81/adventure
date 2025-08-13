@@ -1,0 +1,34 @@
+html, body {
+    height: 100%;
+}
+
+.container.py-4 {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container.py-4 > .row.g-4 {
+    flex: 1 0 auto;
+}
+
+nav[aria-label="Events pagination"] {
+    margin-top: auto;
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+
+/* Ограничение до 3 реда текст */
+.text-truncate-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.col-12.col-md-6.col-lg-4 {
+    max-width: 100px;
+}

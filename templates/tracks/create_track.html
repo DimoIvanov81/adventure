@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'track_creation.form.css' %}">
+    <link rel="stylesheet" href="{% static 'track_creation-form.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -12,7 +12,7 @@
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
 
-                <!-- Основна форма -->
+               
                 <div class="form-group">
                     {{ form.title.label_tag }}
                     {{ form.title }}
@@ -35,7 +35,7 @@
                     </div>
                 </div>
 
-               
+
                 <h3>Track Images</h3>
 
                 {{ image_formset.management_form }}
@@ -57,7 +57,7 @@
                     {% endfor %}
                 </div>
 
-                
+
                 <template id="empty-form">
                     <div class="track-image-form">
                         {{ image_formset.empty_form.image.label_tag }} {{ image_formset.empty_form.image }}
@@ -65,7 +65,7 @@
                         <div class="description-wrapper">
                             {{ image_formset.empty_form.description }}
                         </div>
-                        
+
                     </div>
                 </template>
 
@@ -78,5 +78,5 @@
 {% endblock %}
 
 {% block scripts %}
-    <script src="{% static 'template_scripts.js' %}"></script>
+    <script src="{% static 'js/template_scripts.js' %}"></script>
 {% endblock %}

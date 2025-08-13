@@ -5,6 +5,7 @@ from django.contrib.auth.forms import UserChangeForm, UserCreationForm, Password
 from adventure.accounts.models import AppProfile
 
 UserModel = get_user_model()
+USERNAME_FIELD = UserModel.USERNAME_FIELD
 
 
 # This form is required because we use a CustomUser model.
@@ -14,29 +15,26 @@ UserModel = get_user_model()
 class AppUserChangeForm(UserChangeForm):
     class Meta(UserChangeForm.Meta):
         model = UserModel
+        fields = (USERNAME_FIELD,)
 
 
 # This forms gives the initial chance for registration by accepting email and password
 class AppUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = UserModel
-        fields = ('email',)
+        fields = (USERNAME_FIELD,)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields['email'].widget.attrs = {
-            'placeholder': 'Email',
-            'class': 'form-control',
-        }
-        self.fields['password1'].widget.attrs = {
-            'placeholder': 'Password',
-            'class': 'form-control',
-        }
-        self.fields['password2'].widget.attrs = {
-            'placeholder': 'Confirm Password',
-            'class': 'form-control',
-        }
+        f = self.fields.get(USERNAME_FIELD)
+        if f:
+            f.widget.attrs.update({'placeholder': 'Email', 'class': 'form-control'})
+
+        if 'password1' in self.fields:
+            self.fields['password1'].widget.attrs.update({'placeholder': 'Password', 'class': 'form-control'})
+        if 'password2' in self.fields:
+            self.fields['password2'].widget.attrs.update({'placeholder': 'Confirm Password', 'class': 'form-control'})
 
 
 # After initial registration by giving email and password the user can access the additional options to give info for
@@ -54,9 +52,6 @@ class ProfileForm(forms.ModelForm):
 
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
-
-
-
 
 
 # We use this form to change the email of the registered user in the frontend

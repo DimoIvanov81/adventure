@@ -23,7 +23,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('adventure.accounts.urls')),
     path('', include('adventure.common.urls')),
-    path('tracks/', include('adventure.mtb_tracks.urls'))
+    path('tracks/', include('adventure.mtb_tracks.urls')),
+    path('ratings/', include('adventure.ratings.urls')),
+    path('events/', include('adventure.mtb_events.urls'))
 ]
 
 if settings.DEBUG:

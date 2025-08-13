@@ -1,0 +1,32 @@
+{% extends "common/base.html" %}
+
+{% block content %}
+<div class="container my-5">
+  <h2 class="mb-4">Comments for: {{ event.title }}</h2>
+  <a href="{% url 'my_comments' %}" class="btn btn-sm btn-outline-secondary mb-3">← Back</a>
+
+  {% if comments %}
+    {% for c in comments %}
+      <div class="mb-3 border rounded p-3">
+        <div class="d-flex justify-content-between">
+          <strong>{{ c.author.profile.full_name|default:c.author.email }}</strong>
+          <small class="text-muted">{{ c.date_created|date:"Y-m-d H:i" }}</small>
+        </div>
+        <p class="mb-2">{{ c.text|linebreaksbr }}</p>
+
+        {% if request.user.id == c.author_id %}
+          <div class="d-flex gap-3">
+            <a href="{% url 'my_event_comment_edit' event.id c.id %}" class="small">Edit</a>
+            <form method="post" action="{% url 'my_event_comment_delete' event.id c.id %}" class="m-0 p-0">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-link p-0 m-0 text-danger small">Delete</button>
+            </form>
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  {% else %}
+    <p class="text-muted">No comments yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

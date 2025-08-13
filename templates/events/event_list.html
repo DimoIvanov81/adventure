@@ -1,0 +1,102 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block title %}All Active Events{% endblock %}
+{% block  extra_css %}
+    <link rel="stylesheet" href="{% static 'event_list.css' %}"> {% endblock %}
+
+{% block content %}
+
+    <div class="container py-4 d-flex flex-column min-vh-100 events-view">
+
+        <h1 class="h3 mb-4">All Active Events</h1>
+
+        {% if events %}
+
+            <div class="row g-4 flex-grow-1">
+                {% for event in events %}
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="card event-card shadow-sm h-100">
+
+                            {% with first_img=event.images.first %}
+                                {% if first_img %}
+                                    <a href="{% url 'event_details' event.pk %}">
+                                        <img src="{{ first_img.image.url }}" class="card-img-top"
+                                             alt="{{ event.title }}">
+                                    </a>
+                                {% else %}
+                                    <a href="{% url 'event_details' event.pk %}">
+                                        <img src="{% static 'placeholder-event.jpg' %}" class="card-img-top"
+                                             alt="No image">
+                                    </a>
+                                {% endif %}
+                            {% endwith %}
+
+                            <div class="card-body d-flex flex-column p-2">
+                                <h5 class="card-title mb-1">
+                                    <a class="text-decoration-none" href="{% url 'event_details' event.pk %}">
+                                        {{ event.title }}
+                                    </a>
+                                </h5>
+
+                                <p class="small text-muted mb-1">Starts: {{ event.start_date|date:"Y-m-d" }}</p>
+
+                                <p class="card-text text-truncate-3 mb-2">
+                                    {{ event.description }}
+                                </p>
+
+                                <div class="mt-auto">
+                                    <a href="{% url 'event_details' event.pk %}"
+                                       class="btn btn-outline-primary btn-sm w-100">Details</a>
+                                </div>
+
+
+                            </div>
+
+                            <div class="card-footer bg-transparent small text-muted">
+                                Posted by: {{ event.organizer.profile.full_name|default:event.organizer.email }}
+                            </div>
+
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+
+            <nav class="mt-auto" aria-label="Events pagination">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item"><a class="page-link" href="?page=1" aria-label="First">&laquo;</a></li>
+                        <li class="page-item"><a class="page-link"
+                                                 href="?page={{ page_obj.previous_page_number }}">Prev</a></li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
+                        <li class="page-item disabled"><span class="page-link">Prev</span></li>
+                    {% endif %}
+
+                    <li class="page-item active">
+                        <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                    </li>
+
+                    {% if page_obj.has_next %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                        </li>
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}"
+                                                 aria-label="Last">&raquo;</a></li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">Next</span></li>
+                        <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
+                    {% endif %}
+                </ul>
+            </nav>
+
+        {% else %}
+            <div class="flex-grow-1 d-flex align-items-center justify-content-center">
+                <div class="alert alert-info mb-0">No active events found.</div>
+            </div>
+        {% endif %}
+    </div>
+
+
+
+{% endblock %}

@@ -1,0 +1,97 @@
+
+img.img-fluid {
+    max-height: 400px;
+    object-fit: cover;
+}
+
+
+.img-thumbnail {
+    height: 150px;
+    object-fit: cover;
+}
+
+
+.comment-box {
+    background-color: #f9f9f9;
+    border-left: 4px solid #0d6efd;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+
+
+#star-rating {
+    font-size: 1.5rem;
+    color: #ddd;
+    cursor: pointer;
+}
+
+#star-rating .star {
+    transition: color 0.2s;
+}
+
+.star-rating .star {
+  font-size: 1.5rem;
+  color: #ccc;
+  cursor: pointer;
+  transition: color .2s;
+}
+
+.star-rating .star.hovered,
+.star-rating .star.rated {
+    color: gold;
+}
+
+.star.half {
+    position: relative;
+}
+
+.star.half { position: relative; color: #ccc !important; }
+.star.half::before {
+  content: "\f005";
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  color: gold;
+  position: absolute;
+  left: 0;
+  width: 50%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+
+.sticky-top {
+    top: 100px;
+}
+
+
+@media (max-width: 768px) {
+    .img-thumbnail {
+        height: 100px;
+    }
+
+    #star-rating {
+        font-size: 1.2rem;
+    }
+}
+
+main {
+    padding-top: 80px;
+}
+
+.add-comment-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 1050;
+    padding: 0.7rem 1.2rem;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.rating-section {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
