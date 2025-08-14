@@ -51,9 +51,9 @@ class MtbTracks(models.Model):
     def average_rating(self):
         return self.ratings.aggregate(avg=Avg('rating'))['avg'] or 0
 
-    @property
-    def stars(self):
-        return round(self.average_rating)
+    # @property
+    # def stars(self):
+    #     return round(self.average_rating)
 
 
 class TrackImages(models.Model):

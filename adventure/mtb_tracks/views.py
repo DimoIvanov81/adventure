@@ -46,28 +46,6 @@ class TrackCreationView(LoginRequiredMixin, CreateView):
         return self.render_to_response(self.get_context_data(form=form))
 
 
-@login_required
-def track_comment(request, pk):
-    track = get_object_or_404(MtbTracks, pk=pk)
-
-    if request.method == 'POST':
-        form = TrackCommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.author = request.user
-            comment.track = track
-            comment.save()
-            return redirect('track_detail', pk=track.pk)
-    else:
-        form = TrackCommentForm()
-
-    context = {
-        'form': form,
-        'track': track,
-    }
-    return render(request, 'tracks/comment_create.html', context)
-
-
 class ExploreTracks(ListView):
     model = MtbTracks
     template_name = 'tracks/explore_tracks.html'
