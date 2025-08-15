@@ -22,8 +22,6 @@ class MtbEventForm(PlaceholderFormMixin, forms.ModelForm):
     }
 
 
-
-
 class MtbEventImageForm(PlaceholderFormMixin, forms.ModelForm):
     class Meta:
         model = MtbEventImage

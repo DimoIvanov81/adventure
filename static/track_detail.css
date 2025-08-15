@@ -79,19 +79,37 @@ main {
     padding-top: 80px;
 }
 
-.add-comment-btn {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    z-index: 1050;
-    padding: 0.7rem 1.2rem;
-    font-weight: bold;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-}
+/*.add-comment-btn {*/
+/*    position: fixed;*/
+/*    bottom: 30px;*/
+/*    right: 30px;*/
+/*    z-index: 1050;*/
+/*    padding: 0.7rem 1.2rem;*/
+/*    font-weight: bold;*/
+/*    box-shadow: 0 4px 10px rgba(0,0,0,0.2);*/
+/*}*/
 
 .rating-section {
     background-color: #f8f9fa;
     padding: 1rem;
     border-radius: 0.5rem;
     box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+
+.fab-stack{
+  position: fixed;
+  right: 30px;
+  bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1050;
+}
+
+.fab-stack .btn {
+    white-space: nowrap;
+    padding: 0.7rem 1.2rem;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }

@@ -96,10 +96,17 @@ class MyEventParticipantsView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        participants = self.object.participations_to_event.all()
+        participants = (
+            self.object.participations_to_event
+            .select_related("user")
+            .order_by("-date_joined")
+        )
         ctx["participants"] = participants
         ctx["participants_count"] = participants.count()
-        ctx["emails_list"] = ", ".join(p.user.email for p in participants)
+        ctx["emails_list"] = ", ".join(
+            (p.contact_email or p.user.email) for p in participants
+            if (p.contact_email or p.user.email)
+        )
         return ctx
 
 

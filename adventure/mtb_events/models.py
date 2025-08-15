@@ -64,14 +64,14 @@ class Participation(models.Model):
     event = models.ForeignKey(
         MtbEvent,
         on_delete=models.CASCADE,
-        related_name='participations_to_event'  # gives us a queryset of Participation's objects for this event from
-        # which we can get the count of user or the user itself who have joined the event
+        related_name='participations_to_event'
     )
 
     user = models.ForeignKey(
         UserModel,
         on_delete=models.CASCADE,
-        related_name='participations_to_user'  # gives us the events for which the user has been signed
+        related_name='participations_to_user'
+
     )
 
     contact_email = models.EmailField(

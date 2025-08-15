@@ -18,7 +18,7 @@
                         {% if track.first_image %}
                             <img src="{{ track.first_image.image.url }}" class="card-img-top" alt="{{ track.title }}">
                         {% else %}
-                            <img src="{% static 'images/default_track.jpg' %}" class="card-img-top" alt="Default image"> TODO: I have to set a default picture
+                            <img src="{% static 'images/default_track.png' %}" class="card-img-top" alt="Default image"> 
                         {% endif %}
                         <div class="card-body d-flex flex-column">
                             <h5 class="card-title">{{ track.title }}</h5>

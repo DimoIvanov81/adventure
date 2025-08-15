@@ -97,9 +97,11 @@
             {% endif %}
         </div>
 
-        <a href="{% url 'track_add_comment' track.pk %}" class="btn btn-primary add-comment-btn">
-            Add Comment
-        </a>
+        <div class="fab-stack">
+            <a href="{% url 'explore_tracks' %}" class="btn btn-outline-secondary">Back to all tracks</a>
+            <a href="{% url 'track_add_comment' track.pk %}" class="btn btn-primary">Add Comment</a>
+        </div>
+
     </div>
 {% endblock %}
 

@@ -9,7 +9,7 @@ from adventure.mtb_events.views import (
     add_event_comment,
     edit_event_comment,
     delete_event_comment,
-    participate_event,
+    ParticipationCreateView,
     cancel_participation,
 )
 
@@ -25,7 +25,7 @@ urlpatterns = [
     path('comments/<int:comment_id>/edit/', edit_event_comment, name='edit_event_comment'),
     path('comments/<int:comment_id>/delete/', delete_event_comment, name='delete_event_comment'),
 
-    path('<int:pk>/participate/', participate_event, name='participate_event'),
+    path('<int:pk>/participate/', ParticipationCreateView.as_view(), name='participate_event'),
     path("<int:pk>/cancel/", cancel_participation, name="cancel_participation"),
 
 ]

@@ -1,0 +1,46 @@
+{# templates/events/join_event.html #}
+{% extends "common/base.html" %}
+{% load static %}
+
+{% block title %}{% if form.instance.pk %}Edit Participation{% else %}Join Event{% endif %}{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'event_creation.css' %}">
+
+<div class="animated-gradient">
+  <div class="track-form-container">
+    <h2>
+      {% if form.instance.pk %}Edit Participation{% else %}Join Event{% endif %}
+      <div class="small text-muted mt-1">Event: {{ event.title }}</div>
+    </h2>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+
+      <div class="form-group">
+        {{ form.contact_email.label_tag }}
+        {{ form.contact_email }}
+        {{ form.contact_email.errors }}
+      </div>
+
+      <div class="form-group">
+        {{ form.contact_phone.label_tag }}
+        {{ form.contact_phone }}
+        {{ form.contact_phone.errors }}
+      </div>
+
+      <div class="form-group">
+        {{ form.questions.label_tag }}
+        {{ form.questions }}
+        {{ form.questions.errors }}
+      </div>
+
+      <button type="submit">
+        {% if form.instance.pk %}Save{% else %}Join{% endif %}
+      </button>
+      <a href="{% url 'event_details' event.pk %}" class="btn-cancel">Cancel</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,4 +1,3 @@
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 
@@ -6,8 +5,7 @@ from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.decorators.http import require_POST, require_http_methods
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, FormView
 
 from adventure.mtb_events.models import MtbEvent, Participation, EventComment
 from adventure.mtb_events.forms import (
@@ -79,7 +77,7 @@ class MtbEventDetailView(DetailView):
         return ctx
 
 
-class MtbEventUpdateView(LoginRequiredMixin,  UpdateView):
+class MtbEventUpdateView(LoginRequiredMixin, UpdateView):
     model = MtbEvent
     form_class = MtbEventForm
     template_name = "events/event_form.html"
@@ -137,28 +135,24 @@ class MtbEventDeleteView(LoginRequiredMixin, DeleteView):
         queryset = super().get_queryset()
         return queryset.filter(organizer_id=self.request.user.id)
 
-    def delete(self, request, *args, **kwargs):
-        messages.success(self.request, "Събитието беше изтрито.")
-        return super().delete(request, *args, **kwargs)
 
+class ParticipationCreateView(LoginRequiredMixin, FormView):
+    form_class = ParticipationForm
+    template_name = 'events/participation_form.html'
 
-@login_required
-@require_POST
-def participate_event(request, pk):
-    event = get_object_or_404(MtbEvent, pk=pk)
-    form = ParticipationForm(request.POST)
-    if form.is_valid():
-        part, created = Participation.objects.get_or_create(
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["event"] = get_object_or_404(MtbEvent, pk=self.kwargs["pk"])
+        return ctx
+
+    def form_valid(self, form):
+        event = get_object_or_404(MtbEvent, pk=self.kwargs['pk'])
+        Participation.objects.update_or_create(
             event=event,
-            user=request.user,
+            user=self.request.user,
             defaults=form.cleaned_data,
         )
-        if not created:
-            for f, v in form.cleaned_data.items():
-                setattr(part, f, v)
-            part.save()
-        messages.success(request, "Записа за участие е успешен.")
-    return redirect("event_details", pk=pk)
+        return redirect('event_details', pk=event.pk)
 
 
 @login_required
@@ -184,10 +178,6 @@ def add_event_comment(request, pk):
     return render(request, "events/comment_form.html", context)
 
 
-def _back_to_event_comments(event_pk: int) -> str:
-    return f"{reverse('event_details', kwargs={'pk': event_pk})}#comments"
-
-
 @login_required
 @require_http_methods(["GET", "POST"])
 def edit_event_comment(request, comment_id):
@@ -199,7 +189,6 @@ def edit_event_comment(request, comment_id):
         form = EventCommentForm(request.POST, instance=comment)
         if form.is_valid():
             form.save()
-            messages.success(request, "Коментарът е обновен.")
             return redirect(
                 f"{reverse('event_details', kwargs={'pk': comment.event.pk})}#comment-{comment.pk}"
             )
@@ -220,7 +209,6 @@ def delete_event_comment(request, comment_id):
 
     event_pk = comment.event.pk
     comment.delete()
-    messages.success(request, "Коментарът е изтрит.")
     return redirect(_back_to_event_comments(event_pk))
 
 
@@ -229,5 +217,8 @@ def delete_event_comment(request, comment_id):
 def cancel_participation(request, pk):
     event = get_object_or_404(MtbEvent, pk=pk)
     Participation.objects.filter(event=event, user=request.user).delete()
-    messages.success(request, "Вашето участие е отменено.")
     return redirect("event_details", pk=pk)
+
+
+def _back_to_event_comments(event_pk: int) -> str:
+    return f"{reverse('event_details', kwargs={'pk': event_pk})}#comments"

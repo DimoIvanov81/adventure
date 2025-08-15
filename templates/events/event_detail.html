@@ -2,118 +2,122 @@
 {% load static %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'event_details.css' %}">
+    <link rel="stylesheet" href="{% static 'event_details.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="container my-4 d-flex justify-content-center">
-  <div class="event-details-card event-details-view shadow-sm">
-    <div class="card-body">
-      <h1 class="card-title">{{ event.title }}</h1>
+    <div class="container my-4 d-flex justify-content-center">
+        <div class="event-details-card event-details-view shadow-sm">
+            <div class="card-body">
+                <h1 class="card-title">{{ event.title }}</h1>
 
-      <p class="text-muted mb-1">
-        <strong>Start date:</strong> {{ event.start_date|date:"M d, Y" }}
-      </p>
+                <p class="text-muted mb-1">
+                    <strong>Start date:</strong> {{ event.start_date|date:"M d, Y" }}
+                </p>
 
-      <p class="card-text">{{ event.description }}</p>
+                <p class="card-text">{{ event.description }}</p>
 
-      <hr>
+                <hr>
 
-      <p><strong>Contact email:</strong> {{ event.contact_email }}</p>
-      <p><strong>Contact phone:</strong> {{ event.contact_phone }}</p>
+                <p><strong>Contact email:</strong> {{ event.contact_email }}</p>
+                <p><strong>Contact phone:</strong> {{ event.contact_phone }}</p>
 
-      {% if request.user == event.organizer %}
-        <div class="d-flex gap-2 mb-3">
-          <a href="{% url 'event_edit' event.pk %}" class="btn btn-primary w-50">Edit</a>
-          <a href="{% url 'event_delete' event.pk %}" class="btn btn-danger w-50">Delete</a>
-        </div>
-      {% else %}
-        {% if request.user.is_authenticated %}
-          {% if is_participating %}
-            <div class="alert alert-success py-2 mb-2">You’re going</div>
-            <form method="post" action="{% url 'cancel_participation' event.pk %}" class="mb-3">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-outline-danger w-100">Cancel</button>
-            </form>
-          {% else %}
-            <form method="post" action="{% url 'participate_event' event.pk %}" class="mb-3">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-success w-100">Going</button>
-            </form>
-          {% endif %}
-        {% else %}
-          <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-success w-100 mb-3">Login to join</a>
-        {% endif %}
-      {% endif %}
-
-      <p class="text-muted">Participants: {{ participants_count }}</p>
-
-      <hr>
-      <h5>Event Images</h5>
-
-      
-      {% with imgs=event.images.all %}
-        {% if imgs %}
-          <div class="event-images">
-            {% for img in imgs %}
-              <div class="event-image-item">
-                <a href="{{ img.image.url }}" target="_blank" rel="noopener">
-                  <img src="{{ img.image.url }}" alt="{{ img.description }}">
-                </a>
-                {% if img.description %}
-                  <p class="small mt-1">{{ img.description }}</p>
-                {% endif %}
-              </div>
-            {% endfor %}
-          </div>
-        {% else %}
-          <p>No images uploaded.</p>
-        {% endif %}
-      {% endwith %}
-
-    
-      <hr>
-      <h5 id="comments">Comments</h5>
-
-      {% with comments=event.comments.all %}
-        {% if comments %}
-          <div class="list-group mb-3">
-            {% for c in comments %}
-              {% if c.is_visible %}
-                <div class="list-group-item" id="comment-{{ c.pk }}">
-                  <div class="d-flex justify-content-between align-items-center">
-                    <strong>{{ c.author.email }}</strong>
-                    <small class="text-muted">{{ c.date_created|date:"M d, Y H:i" }}</small>
-                  </div>
-                  <p class="mb-2">{{ c.text }}</p>
-
-                  {% if request.user == c.author or request.user.is_staff %}
-                    <div class="d-flex gap-2">
-                      <a href="{% url 'edit_event_comment' c.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
-                      <form method="post" action="{% url 'delete_event_comment' c.pk %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
-                      </form>
+                {% if request.user == event.organizer %}
+                    <div class="d-flex gap-2 mb-3">
+                        <a href="{% url 'event_edit' event.pk %}" class="btn btn-primary w-50">Edit</a>
+                        <a href="{% url 'event_delete' event.pk %}" class="btn btn-danger w-50">Delete</a>
                     </div>
-                  {% endif %}
-                </div>
-              {% endif %}
-            {% endfor %}
-          </div>
-        {% else %}
-          <p class="text-muted">No comments yet.</p>
-        {% endif %}
-      {% endwith %}
+                {% else %}
+                    {% if request.user.is_authenticated %}
+                        {% if is_participating %}
+                            <div class="alert alert-success py-2 mb-2">You’re going</div>
+                            <form method="post" action="{% url 'cancel_participation' event.pk %}" class="mb-3">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger w-100">Cancel</button>
+                            </form>
+                        {% else %}
+                            {% if request.user.is_authenticated and not is_participating %}
+                                <a href="{% url 'participate_event' event.pk %}" class="btn btn-success w-100 mb-3">Going</a>
+                            {% endif %}
 
-      {% if request.user.is_authenticated %}
-        <a href="{% url 'add_event_comment' event.pk %}" class="btn btn-sm btn-success">Add comment</a>
-      {% else %}
-        <a href="{% url 'login' %}?next={{ request.path }}#comments" class="btn btn-sm btn-success">Login to comment</a>
-      {% endif %}
-      
+                        {% endif %}
+                    {% else %}
+                        <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-success w-100 mb-3">Login to
+                            join</a>
+                    {% endif %}
+                {% endif %}
+
+                <p class="text-muted">Participants: {{ participants_count }}</p>
+
+                <hr>
+                <h5>Event Images</h5>
+
+
+                {% with imgs=event.images.all %}
+                    {% if imgs %}
+                        <div class="event-images">
+                            {% for img in imgs %}
+                                <div class="event-image-item">
+                                    <a href="{{ img.image.url }}" target="_blank" rel="noopener">
+                                        <img src="{{ img.image.url }}" alt="{{ img.description }}">
+                                    </a>
+                                    {% if img.description %}
+                                        <p class="small mt-1">{{ img.description }}</p>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p>No images uploaded.</p>
+                    {% endif %}
+                {% endwith %}
+
+
+                <hr>
+                <h5 id="comments">Comments</h5>
+
+                {% with comments=event.comments.all %}
+                    {% if comments %}
+                        <div class="list-group mb-3">
+                            {% for c in comments %}
+                                {% if c.is_visible %}
+                                    <div class="list-group-item" id="comment-{{ c.pk }}">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <strong>{{ c.author.email }}</strong>
+                                            <small class="text-muted">{{ c.date_created|date:"M d, Y H:i" }}</small>
+                                        </div>
+                                        <p class="mb-2">{{ c.text }}</p>
+
+                                        {% if request.user == c.author or request.user.is_staff %}
+                                            <div class="d-flex gap-2">
+                                                <a href="{% url 'edit_event_comment' c.pk %}"
+                                                   class="btn btn-sm btn-outline-primary">Edit</a>
+                                                <form method="post" action="{% url 'delete_event_comment' c.pk %}">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted">No comments yet.</p>
+                    {% endif %}
+                {% endwith %}
+
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'add_event_comment' event.pk %}" class="btn btn-sm btn-success">Add comment</a>
+                {% else %}
+                    <a href="{% url 'login' %}?next={{ request.path }}#comments" class="btn btn-sm btn-success">Login to
+                        comment</a>
+                {% endif %}
+
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 
-<a href="{% url 'explore_all_events' %}" class="back-to-events-fixed">Back to Events</a>
+    <a href="{% url 'explore_all_events' %}" class="back-to-events-fixed">Back to Events</a>
 {% endblock %}
