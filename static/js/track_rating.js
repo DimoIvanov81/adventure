@@ -1,4 +1,4 @@
-// CSRF cookie helper
+
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -30,15 +30,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
         stars.forEach((star, i) => {
             if (rating >= i + 1) {
-                star.classList.add('rated'); // пълна
+                star.classList.add('rated');
             } else if (rating > i && rating < i + 1) {
-                star.classList.add('half'); // половинка
+                star.classList.add('half');
             }
         });
     }
 
 
-    // покажи гласа на потребителя при зареждане
+
     const initialUserRating = parseFloat(ratingBox.dataset.userRating) || 0;
     updateStarsDisplay(initialUserRating);
 
@@ -59,7 +59,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     return response.json();
                 })
                 .then(data => {
-                    // визуализирай по НОВАТА средна оценка
                     updateStarsDisplay(data.average_rating);
 
                     if (averageRatingSpan) averageRatingSpan.textContent = Number(data.average_rating).toFixed(1);

@@ -4,10 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const emptyForm = document.getElementById("empty-form");
   const totalForms = document.getElementById("id_images-TOTAL_FORMS");
 
-  if (!addBtn || !formsDiv || !emptyForm || !totalForms) {
-    console.error("Form elements not found");
-    return;
-  }
+
 
   let formCount = parseInt(totalForms.value);
 

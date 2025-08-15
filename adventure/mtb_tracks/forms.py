@@ -52,8 +52,7 @@ class TrackCommentForm(PlaceholderFormMixin, forms.ModelForm):
     placeholders = {
         'text': 'You can add some words about what you think',
     }
+
     class Meta:
         model = Comment
         fields = ['text']
-
-

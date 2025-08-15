@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.http import HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views.decorators.http import require_http_methods, require_POST
 from django.views.generic import CreateView, ListView, DetailView
 from adventure.mtb_tracks.forms import MtbTrackForm, TrackImageFormSet, TrackCommentForm
@@ -11,11 +11,21 @@ from adventure.mtb_tracks.models import MtbTracks, Comment
 from adventure.ratings.models import MtbTrackRating
 
 
+class ExploreTracks(ListView):
+    model = MtbTracks
+    template_name = 'tracks/explore_tracks.html'
+    context_object_name = 'tracks'
+    paginate_by = 6
+
+    def get_queryset(self):
+        return MtbTracks.objects.filter(is_published=True).prefetch_related('images')
+
+
 class TrackCreationView(LoginRequiredMixin, CreateView):
     model = MtbTracks
     form_class = MtbTrackForm
     template_name = 'tracks/create_track.html'
-    success_url = 'home'
+    success_url = reverse_lazy('home')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -41,19 +51,6 @@ class TrackCreationView(LoginRequiredMixin, CreateView):
             return redirect(self.get_success_url())
         else:
             return self.render_to_response(self.get_context_data(form=form))
-
-    def form_invalid(self, form):
-        return self.render_to_response(self.get_context_data(form=form))
-
-
-class ExploreTracks(ListView):
-    model = MtbTracks
-    template_name = 'tracks/explore_tracks.html'
-    context_object_name = 'tracks'
-    paginate_by = 6
-
-    def get_queryset(self):
-        return MtbTracks.objects.filter(is_published=True).prefetch_related('images')
 
 
 class TrackDetailView(DetailView):
@@ -102,10 +99,6 @@ def add_comment(request, pk):
     }
 
     return render(request, 'tracks/comment_form.html', context)
-
-
-def _back_to_track_comments(track_pk: int):
-    return f"{reverse('track_detail', kwargs={'pk': track_pk})}#comments"
 
 
 @login_required

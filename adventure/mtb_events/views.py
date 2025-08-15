@@ -8,7 +8,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.decorators.http import require_POST, require_http_methods
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 
-from adventure.mtb_events.mixins import OwnerOrStaffRequiredMixin
+
 from adventure.mtb_events.models import MtbEvent, Participation, EventComment
 from adventure.mtb_events.forms import (
     MtbEventForm,
@@ -16,46 +16,6 @@ from adventure.mtb_events.forms import (
     ParticipationForm,
     EventCommentForm,
 )
-
-
-class MtbEventListView(ListView):
-    model = MtbEvent
-    template_name = "events/event_list.html"
-    context_object_name = "events"
-    paginate_by = 6
-
-    def get_queryset(self):
-        return (
-            MtbEvent.objects.active()
-            .filter(is_published=True)
-            .order_by("-date_created")
-        )
-
-
-class MtbEventDetailView(DetailView):
-    model = MtbEvent
-    template_name = "events/event_detail.html"
-    context_object_name = "event"
-    queryset = (
-        MtbEvent.objects
-        .select_related("organizer")
-        .prefetch_related("images", "participations_to_event__user", "comments__author")
-    )
-
-    def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
-        event = self.object
-        participants = event.participations_to_event.all()
-
-        ctx["images"] = event.images.all()
-        ctx["participants"] = participants
-        ctx["participants_count"] = participants.count()
-
-        user = self.request.user
-        ctx["is_participating"] = (
-                user.is_authenticated and participants.filter(user=user).exists()
-        )
-        return ctx
 
 
 class MtbEventCreateView(LoginRequiredMixin, CreateView):
@@ -93,10 +53,40 @@ class MtbEventCreateView(LoginRequiredMixin, CreateView):
         return reverse("event_details", kwargs={"pk": self.object.pk})
 
 
-class MtbEventUpdateView(LoginRequiredMixin, OwnerOrStaffRequiredMixin, UpdateView):
+class MtbEventDetailView(DetailView):
+    model = MtbEvent
+    template_name = "events/event_detail.html"
+    context_object_name = "event"
+    queryset = (
+        MtbEvent.objects
+        .select_related("organizer")
+        .prefetch_related("images", "participations_to_event__user", "comments__author")
+    )
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        event = self.object
+        participants = event.participations_to_event.all()
+
+        ctx["images"] = event.images.all()
+        ctx["participants"] = participants
+        ctx["participants_count"] = participants.count()
+
+        user = self.request.user
+        ctx["is_participating"] = (
+                user.is_authenticated and participants.filter(user=user).exists()
+        )
+        return ctx
+
+
+class MtbEventUpdateView(LoginRequiredMixin,  UpdateView):
     model = MtbEvent
     form_class = MtbEventForm
     template_name = "events/event_form.html"
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(organizer_id=self.request.user.id)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -124,10 +114,28 @@ class MtbEventUpdateView(LoginRequiredMixin, OwnerOrStaffRequiredMixin, UpdateVi
         return reverse("event_details", kwargs={"pk": self.object.pk})
 
 
-class MtbEventDeleteView(LoginRequiredMixin, OwnerOrStaffRequiredMixin, DeleteView):
+class MtbEventListView(ListView):
+    model = MtbEvent
+    template_name = "events/event_list.html"
+    context_object_name = "events"
+    paginate_by = 6
+
+    def get_queryset(self):
+        return (
+            MtbEvent.objects.active()
+            .filter(is_published=True)
+            .order_by("-date_created")
+        )
+
+
+class MtbEventDeleteView(LoginRequiredMixin, DeleteView):
     model = MtbEvent
     template_name = "events/event_confirm_delete.html"
     success_url = reverse_lazy("explore_all_events")
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(organizer_id=self.request.user.id)
 
     def delete(self, request, *args, **kwargs):
         messages.success(self.request, "Събитието беше изтрито.")

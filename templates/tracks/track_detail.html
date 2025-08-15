@@ -4,7 +4,6 @@
 {% block title %}{{ track.title }}{% endblock %}
 
 {% block extra_css %}
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="{% static 'track_detail.css' %}">
 {% endblock %}
@@ -52,7 +51,7 @@
                          data-user-rating="{{ user_rating|default:0 }}"
                          data-average-rating="{{ track.average_rating }}"
                          data-rate-url="{% url 'mtb-rating' track.pk %}">
-                        {% for i in "0"|rjust:"5" %}
+                        {% for i in "00000" %}
                             <i class="fa-solid fa-star star" data-value="{{ forloop.counter }}"></i>
                         {% endfor %}
                     </div>

@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'track_creation-form.css' %}">
+    <link rel="stylesheet" href="{% static 'track_creation_form.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -12,7 +12,6 @@
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
 
-               
                 <div class="form-group">
                     {{ form.title.label_tag }}
                     {{ form.title }}
@@ -34,8 +33,7 @@
                         {{ form.description }}
                     </div>
                 </div>
-
-
+            
                 <h3>Track Images</h3>
 
                 {{ image_formset.management_form }}
@@ -56,8 +54,7 @@
                         </div>
                     {% endfor %}
                 </div>
-
-
+            
                 <template id="empty-form">
                     <div class="track-image-form">
                         {{ image_formset.empty_form.image.label_tag }} {{ image_formset.empty_form.image }}
@@ -65,11 +62,9 @@
                         <div class="description-wrapper">
                             {{ image_formset.empty_form.description }}
                         </div>
-
                     </div>
                 </template>
-
-
+            
                 <button type="button" id="add-image" class="btn btn-secondary w-100 mb-3">+ Add Image</button>
                 <button type="submit" class="btn btn-primary w-100">Save Track</button>
             </form>
