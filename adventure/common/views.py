@@ -1,4 +1,3 @@
-from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -8,7 +7,6 @@ from django.shortcuts import render, get_object_or_404, redirect
 
 from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView, DetailView, ListView, UpdateView
-
 
 from adventure.mtb_events.models import MtbEvent, EventComment
 from adventure.mtb_tracks.forms import MtbTrackForm, TrackImageFormSet
@@ -24,32 +22,14 @@ def home(request):
 class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = "common/dashboard.html"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
 
-        user = self.request.user
-
-        my_events = MtbEvent.objects.filter(organizer=user).prefetch_related("participations_to_event", "images")
-
-        participating_events = MtbEvent.objects.filter(participations_to_event__user=user).distinct()
-
-        my_tracks = MtbTracks.objects.filter(author=user).prefetch_related("images")
-
-        my_event_comments = EventComment.objects.filter(event__organizer=user).select_related("author", "event")
-
-        context["my_events"] = my_events
-        context["participating_events"] = participating_events
-        context["my_tracks"] = my_tracks
-        context["my_event_comments"] = my_event_comments
-
-        return context
-
+# My Events Views For The Card My Events --------------------------------------------------------
 
 class MyEventsView(LoginRequiredMixin, TemplateView):
     template_name = "common/my_events.html"
 
     def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         user = self.request.user
 
         all_events = (
@@ -64,7 +44,6 @@ class MyEventsView(LoginRequiredMixin, TemplateView):
         )
 
         def wrap(e):
-
             emails = [p.user.email for p in e.participations_to_event.all()]
             return {
                 "event": e,
@@ -76,10 +55,10 @@ class MyEventsView(LoginRequiredMixin, TemplateView):
         active = [wrap(e) for e in all_events.active()]
         expired = [wrap(e) for e in all_events.expired()]
 
-        ctx["active_events"] = active
-        ctx["expired_events"] = expired
-        ctx["total_events_count"] = len(active) + len(expired)
-        return ctx
+        context["active_events"] = active
+        context["expired_events"] = expired
+        context["total_events_count"] = len(active) + len(expired)
+        return context
 
 
 class MyEventParticipantsView(LoginRequiredMixin, DetailView):
@@ -95,19 +74,19 @@ class MyEventParticipantsView(LoginRequiredMixin, DetailView):
         )
 
     def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         participants = (
             self.object.participations_to_event
             .select_related("user")
             .order_by("-date_joined")
         )
-        ctx["participants"] = participants
-        ctx["participants_count"] = participants.count()
-        ctx["emails_list"] = ", ".join(
+        context["participants"] = participants
+        context["participants_count"] = participants.count()
+        context["emails_list"] = ", ".join(
             (p.contact_email or p.user.email) for p in participants
             if (p.contact_email or p.user.email)
         )
-        return ctx
+        return context
 
 
 class MyEventCommentsView(LoginRequiredMixin, DetailView):
@@ -136,9 +115,10 @@ def moderate_delete_event_comment(request, pk, comment_id):
     if request.method != "POST":
         return HttpResponseForbidden("Not allowed")
     comment.delete()
-    messages.success(request, "Коментарът е изтрит.")
     return redirect("my_event_comments", pk=event.pk)
 
+
+# My Tracks Views For The Card My Tracks --------------------------------------------------------
 
 class MyTracksView(LoginRequiredMixin, ListView):
     template_name = "common/my_tracks.html"
@@ -158,10 +138,10 @@ class MyTracksView(LoginRequiredMixin, ListView):
         )
 
     def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
-        qs = ctx["tracks"]
-        ctx["total_tracks"] = qs.paginator.count if hasattr(qs, "paginator") else qs.count()
-        return ctx
+        context = super().get_context_data(**kwargs)
+        qs = context["tracks"]
+        context["total_tracks"] = qs.paginator.count if hasattr(qs, "paginator") else qs.count()
+        return context
 
 
 class MyTrackDetailsView(LoginRequiredMixin, DetailView):
@@ -208,8 +188,8 @@ class MyTrackUpdateView(LoginRequiredMixin, UpdateView):
         return ctx
 
     def form_valid(self, form):
-        ctx = self.get_context_data()
-        image_formset = ctx["image_formset"]
+        context = self.get_context_data()
+        image_formset = context["image_formset"]
         if image_formset.is_valid():
             self.object = form.save()
             image_formset.instance = self.object
@@ -222,11 +202,11 @@ class MyTrackUpdateView(LoginRequiredMixin, UpdateView):
 @require_POST
 def my_track_delete(request, pk):
     track = get_object_or_404(MtbTracks, pk=pk, author=request.user)
-    title = track.title
     track.delete()
-    messages.success(request, f'Тракът „{title}“ беше изтрит.')
     return redirect('my_tracks')
 
+
+# My Participations Views For The Card My Events I am attending ---------------------------------------
 
 class MyJoinedEventsView(LoginRequiredMixin, ListView):
     template_name = "common/my_joined_events.html"

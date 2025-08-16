@@ -8,10 +8,9 @@ UserModel = get_user_model()
 
 
 class MtbEvent(models.Model):
-    title = models.CharField(max_length=100)  # here the author can write somthing like start and edn point
+    title = models.CharField(max_length=100)
 
-    description = models.TextField()  # Here the author should write about the program of the event and every step ao
-    # the event for example -> the number of days, the stops for the evenings and so on
+    description = models.TextField()
 
     start_date = models.DateField()
 

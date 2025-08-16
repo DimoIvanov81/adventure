@@ -1,27 +1,26 @@
+
 html, body {
     height: 100%;
 }
 
-.container.py-4 {
+.container.py-5 {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
 
-.container.py-4 > .row.g-4 {
-    flex: 1 0 auto;
-}
 
 nav[aria-label="Events pagination"] {
     margin-top: auto;
 }
+
 
 .card-img-top {
     height: 200px;
     object-fit: cover;
 }
 
-/* Ограничение до 3 реда текст */
+
 .text-truncate-3 {
     display: -webkit-box;
     -webkit-line-clamp: 3;
@@ -29,6 +28,41 @@ nav[aria-label="Events pagination"] {
     overflow: hidden;
 }
 
-.col-12.col-md-6.col-lg-4 {
-    max-width: 100px;
+
+.rating-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
 }
+
+.stars {
+    display: inline-flex;
+    gap: 4px;
+    line-height: 1;
+
+    color: #ddd;
+}
+
+
+
+.rating-section .stars .fa-solid.star,
+.rating-section .stars .fa-star-half-stroke.star {
+    color: #ffc107 !important;
+}
+
+
+.rating-section .stars .fa-regular.star {
+    color: #ddd !important;
+}
+
+.rating-meta {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+
+.rating-section .stars { line-height: 1; }
+.rating-section .stars .star { font-size: inherit; }
+
+

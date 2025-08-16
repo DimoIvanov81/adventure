@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
+from django.db.models import Avg
 from django.http import HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse, reverse_lazy
@@ -8,6 +9,7 @@ from django.views.decorators.http import require_http_methods, require_POST
 from django.views.generic import CreateView, ListView, DetailView
 from adventure.mtb_tracks.forms import MtbTrackForm, TrackImageFormSet, TrackCommentForm
 from adventure.mtb_tracks.models import MtbTracks, Comment
+from adventure.ratings.forms import MtbTrackRatingForm
 from adventure.ratings.models import MtbTrackRating
 
 
@@ -64,15 +66,33 @@ class TrackDetailView(DetailView):
 
         context['images'] = track.images.all()
         context['comments'] = track.comments.filter(is_visible=True).order_by('-date_created')
-        context['average_rating'] = round(track.average_rating or 0, 1)
+
+        avg = track.ratings.aggregate(avg=Avg('rating'))['avg'] or 0.0
+        context['average_rating'] = round(avg, 1)
         context['rating_count'] = track.ratings.count()
 
+        user_rating = 0
         if self.request.user.is_authenticated:
-            try:
-                rating = track.ratings.get(user=self.request.user)
-                context['user_rating'] = rating.rating
-            except MtbTrackRating.DoesNotExist:
-                context['user_rating'] = 0
+            user_rating = (
+                              track.ratings.filter(user=self.request.user)
+                              .values_list('rating', flat=True)
+                              .first()
+                          ) or 0
+        context['user_rating'] = int(user_rating)
+
+        full = int(avg)
+        frac = avg - full
+        stars = []
+        for i in range(1, 6):
+            if i <= full:
+                stars.append('full')
+            elif i == full + 1 and frac > 0:
+                stars.append('half')
+            else:
+                stars.append('empty')
+        context['avg_stars'] = stars
+
+        context['rating_form'] = MtbTrackRatingForm(initial={'rating': user_rating})
 
         return context
 
