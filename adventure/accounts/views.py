@@ -1,8 +1,6 @@
 from django.contrib.auth import get_user_model, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
-from django.http import request
-from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView
 
@@ -42,9 +40,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "registration/profile.html"
 
     def get_object(self, queryset=None):
-
         return self.request.user.profile
 
     def get_success_url(self):
         return reverse_lazy('home')
-

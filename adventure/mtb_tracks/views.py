@@ -10,7 +10,6 @@ from django.views.generic import CreateView, ListView, DetailView
 from adventure.mtb_tracks.forms import MtbTrackForm, TrackImageFormSet, TrackCommentForm
 from adventure.mtb_tracks.models import MtbTracks, Comment
 from adventure.ratings.forms import MtbTrackRatingForm
-from adventure.ratings.models import MtbTrackRating
 
 
 class ExploreTracks(ListView):
@@ -27,7 +26,7 @@ class TrackCreationView(LoginRequiredMixin, CreateView):
     model = MtbTracks
     form_class = MtbTrackForm
     template_name = 'tracks/create_track.html'
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('explore_tracks')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -40,19 +39,21 @@ class TrackCreationView(LoginRequiredMixin, CreateView):
         return context
 
     def form_valid(self, form):
-        context = self.get_context_data()
-        image_formset = context['image_formset']
+        ctx = self.get_context_data()
+        image_formset = ctx['image_formset']
 
-        if image_formset.is_valid():
-            form.instance.author = self.request.user
-            self.object = form.save()
+        if not image_formset.is_valid():
+            return self.render_to_response(self.get_context_data(form=form, image_formset=image_formset))
 
-            image_formset.instance = self.object
-            image_formset.save()
+        self.object = form.save(commit=False)
+        self.object.author = self.request.user
+        self.object.save()
+        form.save_m2m()
 
-            return redirect(self.get_success_url())
-        else:
-            return self.render_to_response(self.get_context_data(form=form))
+        image_formset.instance = self.object
+        image_formset.save()
+
+        return redirect(self.get_success_url())
 
 
 class TrackDetailView(DetailView):

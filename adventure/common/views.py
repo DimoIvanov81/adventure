@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, Avg
 from django.http import HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
 
 from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView, DetailView, ListView, UpdateView
@@ -161,11 +162,11 @@ class MyTrackDetailsView(LoginRequiredMixin, DetailView):
         )
 
     def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
-        t = ctx["track"]
-        ctx["average_rating"] = getattr(t, "average_rating", None) or getattr(t, "avg_rating", None)
-        ctx["rating_count"] = getattr(t, "rating_count", None) or getattr(t, "ratings_count", 0)
-        return ctx
+        context = super().get_context_data(**kwargs)
+        t = context["track"]
+        context["average_rating"] = getattr(t, "average_rating", None) or getattr(t, "avg_rating", None)
+        context["rating_count"] = getattr(t, "rating_count", None) or getattr(t, "ratings_count", 0)
+        return context
 
 
 class MyTrackUpdateView(LoginRequiredMixin, UpdateView):
@@ -190,12 +191,20 @@ class MyTrackUpdateView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         context = self.get_context_data()
         image_formset = context["image_formset"]
+
         if image_formset.is_valid():
             self.object = form.save()
             image_formset.instance = self.object
             image_formset.save()
             return redirect("my_track_details", pk=self.object.pk)
-        return self.render_to_response(self.get_context_data(form=form))
+
+
+        print("Formset errors:", image_formset.errors)
+        print("Non-form errors:", image_formset.non_form_errors())
+
+        context["form"] = form
+        context["image_formset"] = image_formset
+        return self.render_to_response(context)
 
 
 @login_required

@@ -2,72 +2,82 @@
 {% load static %}
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'common/../../static/my_track_details.css' %}">
+  <link rel="stylesheet" href="{% static 'track_list_styles.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="container my-5">
-  <h1 class="mb-4 text-center">My Tracks ({{ total_tracks }})</h1>
+<div class="container tracks-container">
 
-  {% if tracks %}
-    <div class="row g-4">
-      {% for t in tracks %}
-        <div class="col-12 col-md-6 col-lg-4">
-          <div class="card h-100 shadow-sm">
-            {% with first_img=t.images.first %}
-              {% if first_img %}
-                <img src="{{ first_img.image.url }}" class="card-img-top" alt="{{ t.title }}">
-              {% endif %}
-            {% endwith %}
+  <div class="tracks-header text-center">
+    {% if page_obj and page_obj.paginator.count %}
+      <h2>My Tracks ({{ page_obj.paginator.count }})</h2>
+    {% else %}
+      <h2>You haven't shared any tracks yet.</h2>
+    {% endif %}
+  </div>
 
-            <div class="card-body d-flex flex-column">
-              <h5 class="card-title mb-1">{{ t.title }}</h5>
+  <div class="row g-4">
+    
+    {% for t in page_obj %}
+      <div class="col-12 col-md-4">
+        <div class="card track-card h-100">
+          {% with first_img=t.images.first %}
+            {% if first_img %}
+              <img src="{{ first_img.image.url }}" class="card-img-top" alt="{{ t.title }}">
+            {% else %}
+              <img src="{% static 'images/default_track.png' %}" class="card-img-top" alt="Default image">
+            {% endif %}
+          {% endwith %}
 
-              {% if t.avg_rating %}
-                <div class="small text-muted mb-2">
-                  Avg rating: {{ t.avg_rating|floatformat:2 }} ({{ t.ratings_count }} votes)
-                </div>
-              {% else %}
-                <div class="small text-muted mb-2">No ratings yet</div>
-              {% endif %}
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">{{ t.title }}</h5>
 
-              {% if t.description %}
-                <p class="card-text text-truncate-3 mb-2">{{ t.description }}</p>
-              {% endif %}
+            {% if t.description %}
+              <p class="card-text">{{ t.description|truncatewords:12 }}</p>
+            {% endif %}
 
-              <div class="mt-auto d-flex align-items-center justify-content-between">
-                <span class="small text-muted">Created: {{ t.date_created|date:"Y-m-d" }}</span>
-                <a href="{% url 'my_track_details' t.pk %}" class="btn btn-primary btn-sm">Details</a>
-              </div>
-            </div>
+            {% if t.avg_rating %}
+              <p class="small text-muted mb-2">
+                Avg rating: {{ t.avg_rating|floatformat:2 }} ({{ t.ratings_count }} votes)
+              </p>
+            {% else %}
+              <p class="small text-muted mb-2">No ratings yet</p>
+            {% endif %}
+
+            <p class="small text-muted mb-2">Created: {{ t.date_created|date:"Y-m-d" }}</p>
+
+            <a href="{% url 'my_track_details' t.pk %}" class="btn btn-primary btn-sm mt-auto">Details</a>
           </div>
         </div>
-      {% endfor %}
-    </div>
+      </div>
+    {% empty %}
+      <div class="col-12 text-center text-muted">No tracks.</div>
+    {% endfor %}
+  </div>
 
-    {% if is_paginated %}
-      <nav class="mt-4" aria-label="pagination">
-        <ul class="pagination justify-content-center">
-          {% if page_obj.has_previous %}
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Prev</a></li>
-          {% else %}
-            <li class="page-item disabled"><span class="page-link">Prev</span></li>
-          {% endif %}
-
-          <li class="page-item disabled">
-            <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+  {% if is_paginated %}
+    <nav aria-label="Page navigation" class="mt-4">
+      <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
           </li>
+        {% endif %}
 
-          {% if page_obj.has_next %}
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
-          {% else %}
-            <li class="page-item disabled"><span class="page-link">Next</span></li>
-          {% endif %}
-        </ul>
-      </nav>
-    {% endif %}
-  {% else %}
-    <div class="alert alert-info">You haven't shared any tracks yet.</div>
+        {% for num in page_obj.paginator.page_range %}
+          <li class="page-item {% if num == page_obj.number %}active{% endif %}">
+            <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+          </li>
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
   {% endif %}
+
 </div>
 {% endblock %}

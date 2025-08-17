@@ -8,3 +8,21 @@
   max-height: calc(100vh - 220px);
   overflow-y: auto;
 }
+
+.back-btn{
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1100;
+
+  padding: 12px 24px;
+  font-size: 1.05rem;
+  border-radius: 9999px;
+
+  box-shadow: 0 6px 14px rgba(0,0,0,.22);
+}
+
+
+.back-btn:hover{
+  transform: translateY(-1px);
+}
